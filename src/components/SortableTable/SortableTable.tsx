@@ -4,27 +4,8 @@ import { useState } from "react";
 import classes from './SortableTable.module.css';
 
 export interface SortableTableProps {
-    columns: { key: keyof RowData, label: string }[]
-    data: RowData[]
-}
-
-interface RowData {
-    name: string;
-    team: string;
-    position: string;
-    value: number;
-    points: number;
-    bonusPoints: number;
-    bonusAttacking: number;
-    bonusDefending: number;
-    pointsPerGame: number;
-    threeWeekAverage: number;
-    fiveWeekAverage: number;
-    selection: number;
-    minutes: number;
-    gamesPlayed: number;
-    goals: number;
-    assists: number;
+    columns: { key: string, label: string }[]
+    data: any[]
 }
 
 interface ThProps {
@@ -52,14 +33,14 @@ function Th({ children, reversed, sorted, onSort }: ThProps) {
     );
 }
 
-function filterData(data: RowData[], search: string) {
+function filterData(data: any[], search: string) {
     const query = search.toLowerCase().trim();
-    return data.filter((item: RowData) =>
+    return data.filter((item) =>
         keys(data[0]).some((key: keyof typeof item) => item[key].toString().toLowerCase().includes(query))
     );
 }
 
-function sortData(data: RowData[], payload: { sortBy: keyof RowData | null; reversed: boolean; search: string; }) {
+function sortData(data: any[], payload: { sortBy: keyof any | null; reversed: boolean; search: string; }) {
     const { sortBy } = payload;
 
     if (!sortBy)
@@ -68,10 +49,8 @@ function sortData(data: RowData[], payload: { sortBy: keyof RowData | null; reve
     return filterData(
         [...data].sort((a, b) => {
             if (payload.reversed) {
-                // @ts-expect-error
                 return typeof a[sortBy] === 'string' ? b[sortBy].localeCompare(a[sortBy]) : (b[sortBy] > a[sortBy] ? -1 : 1);
             }
-            // @ts-expect-error
             return typeof a[sortBy] === 'string' ? a[sortBy].localeCompare(b[sortBy]) : (a[sortBy] > b[sortBy] ? -1 : 1);
         }),
         payload.search
@@ -81,10 +60,10 @@ function sortData(data: RowData[], payload: { sortBy: keyof RowData | null; reve
 export const SortableTable: React.FC<SortableTableProps> = ({ columns, data }: SortableTableProps) => {
     const [search, setSearch] = useState('');
     const [sortedData, setSortedData] = useState(data);
-    const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
+    const [sortBy, setSortBy] = useState<keyof any | null>(null);
     const [reverseSortDirection, setReverseSortDirection] = useState(false);
 
-    const setSorting = (field: keyof RowData) => {
+    const setSorting = (field: keyof any) => {
         const reversed = field === sortBy ? !reverseSortDirection : false;
         setReverseSortDirection(reversed);
         setSortBy(field);
@@ -97,7 +76,7 @@ export const SortableTable: React.FC<SortableTableProps> = ({ columns, data }: S
         setSortedData(sortData(data, { sortBy, reversed: reverseSortDirection, search: value }))
     };
 
-    const rows = sortedData.map((row: RowData) => {
+    const rows = sortedData.map((row) => {
         return (
             <Table.Tr key={Object.keys(row)[0]}>
                 {columns.map(({ key }) => <Table.Td key={key}>{row[key]}</Table.Td>)}

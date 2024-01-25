@@ -1,6 +1,6 @@
 import { SortableTableProps} from  './SortableTable';
 
-export const standard = () => ({
+export const fantasy = () => ({
     columns: [
         { key: 'name', label: 'Player' },
         { key: 'team', label: 'Team' },
@@ -58,3 +58,23 @@ export const standard = () => ({
         },
     ]
 }) satisfies SortableTableProps;
+
+export const salary = () => ({
+    columns: [
+        { key: 'name', label: 'Player' },
+        { key: 'team', label: 'Team' },
+        { key: 'salary', label: 'Salary' },
+    ],
+    data: [
+        {
+            name: 'Carles Gil',
+            team: 'New England Revolution',
+            salary: 2000000,
+        },
+        {
+            name: 'Cucho Hernandez',
+            team: 'Columbus Crew',
+            salary: 1000000,
+        }
+    ]
+ }) satisfies SortableTableProps;
